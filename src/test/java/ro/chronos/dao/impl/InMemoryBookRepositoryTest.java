@@ -1,6 +1,7 @@
 package ro.chronos.dao.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Properties.extractProperty;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class InMemoryBookRepositoryTest {
     IBookRepository bookRepository;
 
     @Mock
-    Book someBook;
+    Book someBook, someOtherBook;
 
     @Before
     public void setUp() throws Exception {
@@ -45,24 +46,49 @@ public class InMemoryBookRepositoryTest {
 
     @Test
     public void testRemoveBookById() throws Exception {
-    	when(someBook.getBookId()).thenReturn(24);
+    	int justSomeBookId = 24;
+    	when(someBook.getBookId()).thenReturn(justSomeBookId);
     	bookRepository.addBook(someBook);
-    	bookRepository.removeBookById(someBook.getBookId());
-    	assertThat(bookRepository.getBookById(24)).isNull();
+    	bookRepository.removeBookById(justSomeBookId);
+    	assertThat(bookRepository.getBookById(justSomeBookId)).isNull();
     }
 
     @Test
     public void testRemoveBookByTitle() throws Exception {
-
+    	String justSomeBookTitle = "The Book of Uselessness";
+    	int theBookId = 11;
+    	when(someBook.getTitle()).thenReturn(justSomeBookTitle);
+    	when(someBook.getBookId()).thenReturn(theBookId);
+    	bookRepository.addBook(someBook);
+    	bookRepository.removeBookByTitle(justSomeBookTitle);
+    	assertThat(bookRepository.getBookById(theBookId)).isNull();
     }
 
     @Test
     public void testUpdateBook() throws Exception {
-
+    	int commonBookId = 111;
+    	
+		when(someBook.getBookId()).thenReturn(commonBookId);
+    	when(someBook.getTitle()).thenReturn("Faust");
+    	when(someOtherBook.getBookId()).thenReturn(commonBookId);
+    	when(someOtherBook.getTitle()).thenReturn("Moby Dick");
+    	
+    	bookRepository.addBook(someBook);
+    	assertThat(bookRepository.getBookById(commonBookId)).isEqualTo(someBook);
+    	
+    	// book is searched & replaced by id
+    	bookRepository.updateBook(someOtherBook);
+    	assertThat(bookRepository.getBookById(commonBookId)).isEqualTo(someOtherBook);
     }
 
     @Test
     public void testGetAllBooks() throws Exception {
-
+    	when(someBook.getBookId()).thenReturn(121);
+    	when(someOtherBook.getBookId()).thenReturn(378);
+    	bookRepository.addBook(someBook);
+    	bookRepository.addBook(someOtherBook);
+    	assertThat(bookRepository.getAllBooks()).hasSize(2);
+    	assertThat(bookRepository.getAllBooks()).contains(someBook, someOtherBook);
+    	assertThat(extractProperty("bookId", Integer.class).from(bookRepository.getAllBooks())).contains(121, 378);
     }
 }
