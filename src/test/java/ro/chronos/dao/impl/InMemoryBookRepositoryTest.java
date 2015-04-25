@@ -1,19 +1,20 @@
 package ro.chronos.dao.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import ro.chronos.dao.IBookRepository;
 import ro.chronos.main.BootApplication;
 import ro.chronos.model.Book;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Test the various book repository API.
@@ -27,11 +28,12 @@ public class InMemoryBookRepositoryTest {
     @Autowired
     IBookRepository bookRepository;
 
+    @Mock
     Book someBook;
 
     @Before
     public void setUp() throws Exception {
-        someBook = mock(Book.class);
+    	MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -43,7 +45,10 @@ public class InMemoryBookRepositoryTest {
 
     @Test
     public void testRemoveBookById() throws Exception {
-
+    	when(someBook.getBookId()).thenReturn(24);
+    	bookRepository.addBook(someBook);
+    	bookRepository.removeBookById(someBook.getBookId());
+    	assertThat(bookRepository.getBookById(24)).isNull();
     }
 
     @Test
