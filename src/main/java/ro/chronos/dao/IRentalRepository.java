@@ -1,8 +1,6 @@
 package ro.chronos.dao;
 
 import java.util.List;
-import org.springframework.stereotype.Repository;
-
 import ro.chronos.model.Book;
 import ro.chronos.model.BookRental;
 import ro.chronos.model.Borrower;
@@ -12,19 +10,18 @@ import ro.chronos.model.Borrower;
  * <p/>
  * Created by alexandrumacavei on 26.04.15.
  */
-@Repository
 public interface IRentalRepository {
-	void addRental(BookRental aBookRental);
+    void addRental(BookRental aBookRental);
 
-	Book getRentalById(int aBookRentalId);
+    Book getRentalById(int aBookRentalId);
 
-	void removeRentalById(int aBookRentalId);
+    void removeRentalById(int aBookRentalId);
 
-	void removeBookByBorrower(Borrower aBorrower);
+    void removeBookByBorrower(Borrower aBorrower);
 
-	void updateRentalWithBook(Book aBook, BookRental aBookRental);
+    void updateRentalWithBook(Book aBook, BookRental aBookRental);
 
-	List<Book> getAllBookRentals();
+    List<Book> getAllBookRentals();
 
-	List<Book> getBooksRentedByBorrower(Borrower aBorrower);
+    List<Book> getBooksRentedByBorrower(Borrower aBorrower);
 }

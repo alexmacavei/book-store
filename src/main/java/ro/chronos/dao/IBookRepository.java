@@ -1,7 +1,5 @@
 package ro.chronos.dao;
 
-import org.springframework.stereotype.Repository;
-
 import ro.chronos.model.Book;
 
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.Optional;
  * <p/>
  * Created by alexandrumacavei on 25.04.15.
  */
-@Repository
 public interface IBookRepository {
     void addBook(Book aBook);
 
@@ -25,6 +22,6 @@ public interface IBookRepository {
     void updateBook(Book book);
 
     List<Book> getAllBooks();
-    
+
     void clearDatabase();
 }

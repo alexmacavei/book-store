@@ -7,9 +7,9 @@ package ro.chronos.exception;
  */
 public class MultipleIdBooksException extends IllegalStateException {
 
-	private static final long serialVersionUID = 2006817837367908347L;
+    private static final long serialVersionUID = 2006817837367908347L;
 
-	public MultipleIdBooksException() {
+    public MultipleIdBooksException() {
         super();
     }
 }

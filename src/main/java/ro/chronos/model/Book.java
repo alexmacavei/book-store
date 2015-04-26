@@ -9,17 +9,19 @@ import java.math.BigDecimal;
  */
 public class Book {
 
-    public int bookId;
-    public String title;
-    public String authorName;
-    public BigDecimal price;
-    public boolean withPictures;
+    private int bookId;
+    private String title;
+    private String authorName;
+    private BigDecimal price;
+    private boolean withPictures;
 
-    public Book(int bookId, String title, String authorName, BigDecimal price, boolean withPictures) {
-        this.title = title;
-        this.authorName = authorName;
-        this.price = price;
-        this.withPictures = withPictures;
+    public Book(int aBookId, String aTitle, String anAuthorName,
+            BigDecimal aPrice, boolean aWithPictures) {
+        this.bookId = aBookId;
+        this.title = aTitle;
+        this.authorName = anAuthorName;
+        this.price = aPrice;
+        this.withPictures = aWithPictures;
     }
 
     public int getBookId() {
