@@ -3,6 +3,7 @@ package ro.chronos.dao.impl;
 import org.springframework.stereotype.Component;
 
 import ro.chronos.dao.IBookRepository;
+import ro.chronos.exception.MultipleIdBooksException;
 import ro.chronos.model.Book;
 
 import java.util.ArrayList;
@@ -29,7 +30,11 @@ public class InMemoryBookRepository implements IBookRepository {
 	 *            item to add
 	 */
 	public void addBook(final Book aBook) {
-		bookRepository.add(aBook);
+		if (getBookById(aBook.getBookId()).isPresent()) {
+			throw new MultipleIdBooksException();
+		} else {
+			bookRepository.add(aBook);
+		}
 	}
 
 	/**
@@ -37,17 +42,11 @@ public class InMemoryBookRepository implements IBookRepository {
 	 *
 	 * @param aBookId
 	 *            book to search for
-	 * @return found book or null for none matching
+	 * @return returns Optional<Book> for the searched book
 	 */
-	public Book getBookById(final int aBookId) {
-		Optional<Book> maybeABook = bookRepository.stream().filter(b -> b.getBookId() == aBookId)
+	public Optional<Book> getBookById(final int aBookId) {
+		return bookRepository.stream().filter(b -> b.getBookId() == aBookId)
 				.findFirst();
-		if (maybeABook.isPresent()) {
-			return maybeABook.get();
-		}
-		else {
-			return null;
-		}
 	}
 
 	/**
@@ -56,7 +55,7 @@ public class InMemoryBookRepository implements IBookRepository {
 	 * @param aBookId
 	 *            book to delete
 	 */
-	public void removeBookById(int aBookId) {
+	public void removeBookById(final int aBookId) {
 		bookRepository = bookRepository.stream()
 				.filter(book -> book.getBookId() != aBookId)
 				.collect(Collectors.toList());
@@ -68,7 +67,7 @@ public class InMemoryBookRepository implements IBookRepository {
 	 * @param aBookTitle
 	 *            book to delete
 	 */
-	public void removeBookByTitle(String aBookTitle) {
+	public void removeBookByTitle(final String aBookTitle) {
 		bookRepository = bookRepository.stream()
 				.filter(book -> !Objects.equals(book.getTitle(), aBookTitle))
 				.collect(Collectors.toList());
@@ -81,7 +80,7 @@ public class InMemoryBookRepository implements IBookRepository {
 	 * @param aBook
 	 *            item to update with
 	 */
-	public void updateBook(Book aBook) {
+	public void updateBook(final Book aBook) {
 		ListIterator<Book> repoIterator = bookRepository.listIterator();
 
 		while (repoIterator.hasNext()) {
@@ -98,5 +97,12 @@ public class InMemoryBookRepository implements IBookRepository {
 	 */
 	public List<Book> getAllBooks() {
 		return bookRepository;
+	}
+	
+	/**
+	 * CAUTION! This one empties the database!
+	 */
+	public void clearDatabase() {
+		bookRepository = new ArrayList<>();
 	}
 }
